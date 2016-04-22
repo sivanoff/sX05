@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f4481cb..ee0e8e1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -33,7 +33,7 @@ if(WIN32)
+   add_custom_target(generate ALL DEPENDS ${SHADER_INCLUDES})
+   set(SPECTRUM_SOURCES src/directx_spectrum.cpp)
+ else(WIN32)
+-  find_package(OpenGL)
++#  find_package(OpenGL)
+   if(OPENGL_FOUND)
+     set(INCLUDES ${OPENGL_INCLUDE_DIR})
+     add_definitions(-DHAS_OPENGL)

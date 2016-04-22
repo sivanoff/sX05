@@ -1,0 +1,55 @@
+--- xbmc/cores/AudioEngine/Sinks/AESinkPULSE.cpp.orig	2016-04-14 16:26:55.000000000 +0000
++++ xbmc/cores/AudioEngine/Sinks/AESinkPULSE.cpp	2016-04-14 16:28:47.000000000 +0000
+@@ -25,6 +25,10 @@
+ #include "utils/TimeUtils.h"
+ #include "guilib/LocalizeStrings.h"
+ #include "Application.h"
++#if defined(HAS_LIBAMCODEC)
++#include "utils/AMLUtils.h"
++#include "utils/SysfsUtils.h"
++#endif
+ 
+ static const char *ContextStateToString(pa_context_state s)
+ {
+@@ -679,6 +683,41 @@
+   m_format = format;
+   format.m_dataFormat = m_passthrough ? AE_FMT_S16NE : format.m_dataFormat;
+ 
++#if defined(HAS_LIBAMCODEC)
++  if (aml_present())
++  {
++    aml_set_audio_passthrough(m_passthrough);
++
++    int aml_digital_codec;
++    switch(format.m_dataFormat)
++    {
++      case AE_FMT_AC3:
++        aml_digital_codec = 2;
++        break;
++
++      case AE_FMT_DTS:
++        aml_digital_codec = 3;
++        break;
++
++      case AE_FMT_EAC3:
++        aml_digital_codec = 4;
++        break;
++
++      case AE_FMT_DTSHD:
++        aml_digital_codec = 5;
++        break;
++
++      case AE_FMT_TRUEHD:
++        aml_digital_codec = 7;
++        break;
++
++      default:
++        aml_digital_codec = 0;
++    }
++    SysfsUtils::SetInt("/sys/class/audiodsp/digital_codec", aml_digital_codec);
++  }
++#endif
++
+   CLog::Log(LOGNOTICE, "PulseAudio: Opened device %s in %s mode with Buffersize %u ms",
+                       device.c_str(), m_passthrough ? "passthrough" : "pcm",
+                       (unsigned int) ((m_BufferSize / (float) m_BytesPerSecond) * 1000));

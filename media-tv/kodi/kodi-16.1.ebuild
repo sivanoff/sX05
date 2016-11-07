@@ -162,7 +162,6 @@ src_prepare() {
 #	epatch "${FILESDIR}"/${PN}-16-aml.patch
 	epatch "${FILESDIR}"/${PN}-16-aml-passthrough.patch
 #	epatch "${FILESDIR}"/${PN}-16-aml-pa-pt.patch
-	epatch "${FILESDIR}"/${PN}-999.10-aarch64-support.patch
 	epatch "${FILESDIR}"/${PN}-999.11-aarch64-support.patch
 	epatch_user #293109
 
